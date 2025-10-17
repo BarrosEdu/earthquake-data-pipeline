@@ -13,7 +13,7 @@ This repository implements a simplified real-time data pipeline for global earth
 - **Serve** results via a **FastAPI** microservice with filters for recency, magnitude and proximity.
 - **Governance** using a lightweight **RUN_ID** audit trail and timestamps.
 
-![Architecture Diagram](architecture_diagram.png)
+![Architecture Diagram](architecture_diagram.svg)
 
 > The pipeline also keeps a Parquet **silver** layer for quick ad‑hoc analytics and replayability.
 
