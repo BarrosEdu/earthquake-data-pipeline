@@ -10,3 +10,4 @@ pytz
 requests
 pydeck
 streamlit
+gunicorn
