@@ -49,10 +49,10 @@ logs/
 # ==========================================
 #data/bronze/
 #data/silver/
-.parquet-cache/
-.parquet/
-*.parquet
-*.json
+#.parquet-cache/
+#.parquet/
+#*.parquet
+#*.json
 
 # ==========================================
 # Database / secrets

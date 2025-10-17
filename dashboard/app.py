@@ -15,9 +15,9 @@ st.set_page_config(page_title="Earthquake Monitor (API-driven)", layout="wide")
 # ------------------------
 # Config
 # ------------------------
-DEFAULT_API_BASE = os.getenv("API_BASE_URL", "http://localhost:8000")
+DEFAULT_API_BASE = os.getenv("API_BASE_URL", "https://earthquake-ce5c9a0f9ec7.herokuapp.com/")
 st.sidebar.title("⚙️ Settings")
-api_base = st.sidebar.text_input("API Base URL", value=DEFAULT_API_BASE, help="FastAPI base URL (e.g. http://localhost:8000)")
+api_base = st.sidebar.text_input("API Base URL", value=DEFAULT_API_BASE, help=f"FastAPI base URL {DEFAULT_API_BASE}")
 
 mode = st.sidebar.radio("Query Mode", ["Recent", "Around"])
 
@@ -85,7 +85,7 @@ with st.expander("About this dashboard", expanded=False):
     - `GET /earthquakes/recent`
     - `GET /earthquakes/around`
     """)
-    st.code("export API_BASE_URL=http://localhost:8000", language="bash")
+    st.code(f"export API_BASE_URL={DEFAULT_API_BASE}", language="bash")
 
 # Fetch data
 try:
