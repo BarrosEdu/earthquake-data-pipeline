@@ -1,4 +1,4 @@
-# ingest/load_postgres.py
+
 import os
 import pandas as pd
 import pyarrow.dataset as ds
@@ -10,9 +10,23 @@ from dotenv import load_dotenv
 load_dotenv()
 
 SILVER_BASE = os.getenv("SILVER_BASE", "./data/silver")
-RUN_DATE = os.getenv("RUN_DATE")  # ex: 2025-10-16
-RUN_ID   = os.getenv("RUN_ID")    # ex: 20251016T092819Z
-SOURCE   = "USGS"
+SOURCE = "USGS"
+
+
+def _latest_stats_parquet():
+    import glob
+    paths = sorted(glob.glob(f"{SILVER_BASE}/run_stats/date=*/run_id=*/stats.parquet"))
+    if not paths:
+        raise FileNotFoundError("Nenhum stats.parquet encontrado em run_stats/")
+    return paths[-1]
+
+stats_parquet = _latest_stats_parquet()
+
+# Extract the latest RUN_DATE e RUN_ID do path
+parts = stats_parquet.split("/")
+RUN_DATE = parts[-3].split("=")[1]
+RUN_ID = parts[-2].split("=")[1]
+
 
 def upsert_ingestion_run(stats_path: str):
     df_stats = ds.dataset(stats_path, format="parquet").to_table().to_pandas()
