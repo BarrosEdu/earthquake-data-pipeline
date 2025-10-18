@@ -5,6 +5,14 @@
 
 - [Earthquake Monitor - Dashboard](https://earthquake-data-pipeline.streamlit.app)
 - [API Docs](https://earthquake-ce5c9a0f9ec7.herokuapp.com/docs)
+> **Note:**  
+> This API uses a lightweight API Key middleware for demonstration.  
+> You can use the demo key below to test the endpoints directly:  
+> 
+> ```
+> x-api-key: demo-4e3f5a97-0b2a-4d92-b6c4-71a5e4181d43
+> ```
+> 
 
 ## 1. Overview
 
@@ -29,12 +37,35 @@ This repository implements a simplified real-time data pipeline for global earth
 - **Streamlit** (optional dashboard)
 
 ## 3. Repository Structure
-
-Below is the auto-generated folder tree from the submitted package:
-
-<details>
-<summary>📁 Repository Structure (click to expand)</summary>
-
+.
+├── ingest/
+│ ├── fetch_data.py # Fetches raw data from USGS API (bronze layer)
+│ ├── transform.py # Cleans and normalizes to Parquet (silver layer)
+│ └── load_postgres.py # Loads normalized data into PostgreSQL
+│
+├── api/
+│ ├── main.py # FastAPI app entrypoint
+│ ├── routers/
+│ │ └── earthquakes.py # REST endpoints for querying earthquakes
+│ ├── db.py # SQLAlchemy/PostGIS connection setup
+│ └── middleware/
+│ └── auth.py # API Key authentication middleware
+│
+├── dashboard/
+│ └── app.py # Streamlit visualization
+│
+├── schemas/
+│ └── models.py # Pydantic models for validation
+│
+├── data/
+│ ├── bronze/ # Raw JSON files (downloaded data)
+│ └── silver/ # Parquet files (transformed data)
+│
+├── .env.example # Example environment configuration
+├── Procfile # Heroku deployment commands
+├── requirements.txt # Python dependencies
+├── README.md # Project documentation
+└── .gitignore # Excluded files for version control
 
 ## 4. Setup & Run
 
