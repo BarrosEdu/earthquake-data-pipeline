@@ -1,4 +1,3 @@
-
 import os
 import time
 import math
@@ -15,7 +14,15 @@ st.set_page_config(page_title="Earthquake Monitor (API-driven)", layout="wide")
 # ------------------------
 # Config
 # ------------------------
-DEFAULT_API_BASE = os.getenv("API_BASE_URL", "https://earthquake-ce5c9a0f9ec7.herokuapp.com/")
+# 1) Lê API_KEY de st.secrets ou ambiente
+API_KEY = st.secrets.get("API_KEY", os.getenv("API_KEY", ""))  
+if not API_KEY:
+    st.warning("API_KEY não encontrada em st.secrets nem no ambiente. As chamadas à API protegida podem falhar (401).")
+
+# 2) Cabeçalho padrão com a API Key
+HEADERS = {"X-API-Key": API_KEY} if API_KEY else {}            
+
+DEFAULT_API_BASE = os.getenv("API_BASE_URL", "https://earthquake-ce5c9a0f9ec7.herokuapp.com")
 st.sidebar.title("⚙️ Settings")
 api_base = st.sidebar.text_input("API Base URL", value=DEFAULT_API_BASE, help=f"FastAPI base URL {DEFAULT_API_BASE}")
 
@@ -49,7 +56,8 @@ if mode == "Around":
 def fetch_recent(api_base: str, hours: int, min_mag: float, limit: int):
     url = f"{api_base}/earthquakes/recent"
     params = dict(hours=hours, min_mag=min_mag, limit=limit)
-    r = requests.get(url, params=params, timeout=30)
+    
+    r = requests.get(url, params=params, headers=HEADERS, timeout=30)  
     r.raise_for_status()
     return r.json()
 
@@ -57,7 +65,8 @@ def fetch_recent(api_base: str, hours: int, min_mag: float, limit: int):
 def fetch_around(api_base: str, lat: float, lon: float, radius_km: float, hours: int, min_mag: float, limit: int):
     url = f"{api_base}/earthquakes/around"
     params = dict(lat=lat, lon=lon, radius_km=radius_km, hours=hours, min_mag=min_mag, limit=limit)
-    r = requests.get(url, params=params, timeout=30)
+    
+    r = requests.get(url, params=params, headers=HEADERS, timeout=30)  
     r.raise_for_status()
     return r.json()
 
@@ -115,25 +124,20 @@ with left:
 with right:
     st.subheader("Map")
     if len(df) and {"lat","lon"}.issubset(df.columns):
-        # center of map
         mean_lat = float(df["lat"].mean())
         mean_lon = float(df["lon"].mean())
 
-        # compute sizes & colors
-        
         df["_size_m"] = df["mag"].fillna(0).apply(lambda m: 25000 + (m * 40000))
         df["_elev"] = df["mag"].fillna(0).apply(lambda m: 500 + m * 1200)
 
-        
         def color_from_mag(m):
             m = 0 if pd.isna(m) else float(m)
-            if m < 2:   return [80, 160, 255]   
-            if m < 4:   return [255, 200, 80]   
-            if m < 6:   return [255, 140, 60]   
-            return [255, 70, 70]                
+            if m < 2:   return [80, 160, 255]
+            if m < 4:   return [255, 200, 80]
+            if m < 6:   return [255, 140, 60]
+            return [255, 70, 70]
         df["_color"] = df["mag"].apply(color_from_mag)
 
-        # layers
         layers = []
 
         if layer_style == "Circles (recommended)":
@@ -148,7 +152,7 @@ with right:
                 stroked=True,
                 get_line_color=[255, 255, 255],
                 line_width_min_pixels=1,
-                radius_min_pixels=4,   
+                radius_min_pixels=4,
                 radius_max_pixels=60
             ))
         else:
@@ -164,7 +168,6 @@ with right:
                 radius=20000
             ))
 
-        # highlight events
         if highlight_biggest and len(df):
             imax = df["mag"].idxmax()
             if pd.notna(imax):
@@ -177,12 +180,11 @@ with right:
                     pickable=False,
                     filled=False,
                     stroked=True,
-                    get_line_color=[255, 255, 0],  
+                    get_line_color=[255, 255, 0],
                     line_width_min_pixels=3,
                     radius_min_pixels=10
                 ))
 
-        # heatmap 
         if add_heatmap and len(df):
             layers.append(pdk.Layer(
                 "HeatmapLayer",
@@ -192,7 +194,6 @@ with right:
                 aggregation='MEAN'
             ))
 
-        # view
         view_state = pdk.ViewState(latitude=mean_lat, longitude=mean_lon, zoom=2)
 
         tooltip = {
@@ -203,7 +204,6 @@ with right:
         st.pydeck_chart(pdk.Deck(layers=layers, initial_view_state=view_state, tooltip=tooltip))
     else:
         st.info("No data to plot. Try widening the time window or lowering the min magnitude.")
-
 
 st.subheader("Table")
 st.dataframe(df, use_container_width=True)
