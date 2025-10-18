@@ -223,6 +223,18 @@ flowchart LR
   E --> H
 ```
 
+## 10. Limitations & Known Challenges
+- Latency – Data updates follow USGS feed cadence (hourly).
+- No streaming (yet) – Ingestion runs in batches; WebSocket/Kafka integration out of scope for MVP.
+- No historical backfill – Only current “All Day” data retained (by design).
+- Single source – USGS only; multi-source federation left as future enhancement.
+- Basic security – API key suitable for demo, not production-grade authentication.
+
+## 11. Future Enhancements
+- Expand to multiple data sources (EMSC, GFZ).
+- Add Airflow or Prefect for orchestration.
+- Add alerting for magnitude > 6.0 events.
+
 ---
 
 **Authoring note:** Code was intentionally kept as‑is per instructions; this README and the diagram are focused on clarity and evaluability.
