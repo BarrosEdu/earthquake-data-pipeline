@@ -1,4 +1,4 @@
-# api/routers/earthquakes_db.py
+
 import math
 from fastapi import APIRouter, Query
 from typing import List, Optional
@@ -8,19 +8,9 @@ from schemas.models import EarthquakeOut
 
 router = APIRouter(prefix="/earthquakes", tags=["earthquakes"])
 
-def _haversine_km(lat1, lon1, lat2, lon2):
-    R = 6371.0
-    p1, p2 = math.radians(lat1), math.radians(lat2)
-    dphi = math.radians(lat2 - lat1)
-    dlambda = math.radians(lon2 - lon1)
-    a = math.sin(dphi/2)**2 + math.cos(p1)*math.cos(p2)*math.sin(dlambda/2)**2
-    return 2 * R * math.asin(math.sqrt(a))
-
 @router.get("/recent", response_model=List[EarthquakeOut])
 def recent(hours: int = 24, min_mag: float = 0.0, limit: int = 100):
-    """
-    Retorna terremotos das últimas N horas.
-    """
+    
     with SessionLocal() as s:
         q = text("""
           SELECT event_id, mag, place, time_utc, lat, lon, depth_km, run_id, ingestion_time_utc

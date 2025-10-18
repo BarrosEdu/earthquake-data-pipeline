@@ -25,7 +25,7 @@ layer_style = st.sidebar.selectbox(
     "Map layer style",
     ["Circles (recommended)", "3D columns"],
     index=0,
-    help="Circles are easier to see em qualquer zoom; 3D columns são legais para demo."
+    help="Circles are easier to see"
 )
 highlight_biggest = st.sidebar.checkbox("Highlight biggest quake", value=True)
 add_heatmap = st.sidebar.checkbox("Add heatmap overlay", value=False)
@@ -65,7 +65,6 @@ def to_dataframe(items):
     if not items:
         return pd.DataFrame(columns=["id","mag","place","time_utc","lat","lon","depth_km"])
     df = pd.DataFrame(items)
-    # normalize possible nested fields
     for col in ["mag","lat","lon","depth_km"]:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce")
@@ -74,7 +73,7 @@ def to_dataframe(items):
     return df
 
 # ------------------------
-# UI
+# UI/UX
 # ------------------------
 st.title("🌎 Earthquake Monitor — API mode")
 
@@ -125,13 +124,13 @@ with right:
         df["_size_m"] = df["mag"].fillna(0).apply(lambda m: 25000 + (m * 40000))
         df["_elev"] = df["mag"].fillna(0).apply(lambda m: 500 + m * 1200)
 
-        # cor por magnitude (azul -> laranja -> vermelho)
+        
         def color_from_mag(m):
             m = 0 if pd.isna(m) else float(m)
-            if m < 2:   return [80, 160, 255]   # azul claro
-            if m < 4:   return [255, 200, 80]   # laranja
-            if m < 6:   return [255, 140, 60]   # laranja escuro
-            return [255, 70, 70]                # vermelho
+            if m < 2:   return [80, 160, 255]   
+            if m < 4:   return [255, 200, 80]   
+            if m < 6:   return [255, 140, 60]   
+            return [255, 70, 70]                
         df["_color"] = df["mag"].apply(color_from_mag)
 
         # layers
@@ -149,7 +148,7 @@ with right:
                 stroked=True,
                 get_line_color=[255, 255, 255],
                 line_width_min_pixels=1,
-                radius_min_pixels=4,   # garante visibilidade mesmo longe
+                radius_min_pixels=4,   
                 radius_max_pixels=60
             ))
         else:
@@ -165,7 +164,7 @@ with right:
                 radius=20000
             ))
 
-        # opcional: destacar o maior sismo com um círculo claro por cima
+        # highlight events
         if highlight_biggest and len(df):
             imax = df["mag"].idxmax()
             if pd.notna(imax):
@@ -178,12 +177,12 @@ with right:
                     pickable=False,
                     filled=False,
                     stroked=True,
-                    get_line_color=[255, 255, 0],  # amarelo
+                    get_line_color=[255, 255, 0],  
                     line_width_min_pixels=3,
                     radius_min_pixels=10
                 ))
 
-        # opcional: heatmap sobreposto
+        # heatmap 
         if add_heatmap and len(df):
             layers.append(pdk.Layer(
                 "HeatmapLayer",
