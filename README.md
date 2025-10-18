@@ -205,7 +205,12 @@ Return earthquakes near a **lat/lon** within a given radius using PostGIS.
 - Security is basic (.env, no auth on API by default). For production, add OAuth/API keys + TLS.
 - Error handling/retries are minimal by design for speed of delivery.
 
-## 9. Design Diagram (Mermaid)
+## 9. Future Enhancements
+- Expand to multiple data sources (EMSC, GFZ).
+- Add **Airflow** or **Prefect** for orchestration.
+- Add alerting for magnitude > 6.0 events.
+
+## 10. Design Diagram (Mermaid)
 
 ```mermaid
 flowchart LR
@@ -222,18 +227,6 @@ flowchart LR
   C --> H
   E --> H
 ```
-
-## 10. Limitations & Known Challenges
-- Latency – Data updates follow USGS feed cadence (hourly).
-- No streaming (yet) – Ingestion runs in batches; WebSocket/Kafka integration out of scope for MVP.
-- No historical backfill – Only current “All Day” data retained (by design).
-- Single source – USGS only; multi-source federation left as future enhancement.
-- Basic security – API key suitable for demo, not production-grade authentication.
-
-## 11. Future Enhancements
-- Expand to multiple data sources (EMSC, GFZ).
-- Add Airflow or Prefect for orchestration.
-- Add alerting for magnitude > 6.0 events.
 
 ---
 
