@@ -68,7 +68,7 @@ def upsert_earthquakes(eq_parquet_path: str):
                   ingestion_time_utc=EXCLUDED.ingestion_time_utc
             """), r)
 
-    # (Opcional) manter coluna geom atualizada se tiver PostGIS
+    
     if os.getenv("USE_POSTGIS", "0") == "1":
         with engine.begin() as conn:
             conn.execute(text("""
@@ -77,7 +77,7 @@ def upsert_earthquakes(eq_parquet_path: str):
             """))
 
 if __name__ == "__main__":
-    # paths default com base no zip que enviaste
+
     eq_parquet = f"{SILVER_BASE}/earthquakes/date={RUN_DATE}/data.parquet"
     stats_parquet = f"{SILVER_BASE}/run_stats/date={RUN_DATE}/run_id={RUN_ID}/stats.parquet"
     upsert_ingestion_run(stats_parquet)

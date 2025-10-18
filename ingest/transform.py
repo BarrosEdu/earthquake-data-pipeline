@@ -5,7 +5,7 @@ import pytz
 from fecth_data import ingest_to_bronze
 
 def transform_to_silver(bronze_base):
-    # carrega raw e manifest
+    # load raw and manifest
     with open(f'{bronze_base}/usgs_all_hour.geojson') as f:
         data = json.load(f)
     with open(f'{bronze_base}/_manifest.json') as f:
@@ -17,7 +17,9 @@ def transform_to_silver(bronze_base):
 
     df = pd.json_normalize(features)
 
-    # renomeia e extrai
+    #Transformation process - cleaning data and creating new columns
+
+ 
     df['event_id'] = df['id']
     df['mag'] = df['properties.mag']
     df['place'] = df['properties.place']
@@ -29,7 +31,7 @@ def transform_to_silver(bronze_base):
     df['time_local'] = df['time_utc'].dt.tz_convert(tz_local)
     df['updated_local'] = df['updated_utc'].dt.tz_convert(tz_local)
 
-    # coordenadas
+    # coordinates
     coords = df['geometry.coordinates'].apply(pd.Series)
     df['lon'] = coords[0]
     df['lat'] = coords[1]
@@ -40,7 +42,7 @@ def transform_to_silver(bronze_base):
     df['run_id'] = manifest['run_id']
     df['ingestion_time_utc'] = pd.to_datetime(manifest['ingestion_time_utc'])
 
-    # colunas finais (mínimo viável)
+    # Selecting columns to be used in MVP
     cols = [
         'event_id', 'mag', 'place',
         'time_utc', 'time_local',
@@ -50,11 +52,11 @@ def transform_to_silver(bronze_base):
     ]
     df = df[cols].sort_values(['time_utc', 'event_id'])
 
-    # dedup por id mantendo o mais atualizado
+    # dedup Snapshot (latest)
     df = df.sort_values(['event_id', 'updated_utc']).drop_duplicates('event_id', keep='last')
 
-    # salva parquet particionado por dia UTC do evento
-    date_part = df['time_utc'].dt.date.astype(str).iloc[0]  # ou use o dia da ingestão
+    # salve parquet partition by date
+    date_part = df['time_utc'].dt.date.astype(str).iloc[0] 
     outdir = f'./data/silver/earthquakes/date={date_part}'
     os.makedirs(outdir, exist_ok=True)
     df.to_parquet(f'{outdir}/data.parquet', index=False)
@@ -86,8 +88,7 @@ def transform_to_silver(bronze_base):
 
     return {"rows": len(df), "outdir": outdir, "statsdir": stats_dir}
 
-
-# Fluxo
+# Data Flow
 if __name__ == "__main__":
     bronze_info = ingest_to_bronze()
     transform_to_silver(bronze_info['base'])

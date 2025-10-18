@@ -4,12 +4,12 @@ from datetime import datetime, timezone
 USGS_FEED = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson'
 
 def ingest_to_bronze():
-    # 1) baixa
+    # 1) do the download
     r = requests.get(USGS_FEED, timeout=30)
     r.raise_for_status()
     data = r.json()
 
-    # 2) metadados
+    # 2) Create metadata to be used for audit
     ingestion_time = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
     run_id = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
     day = datetime.now(timezone.utc).strftime('%Y-%m-%d')
@@ -18,11 +18,11 @@ def ingest_to_bronze():
     base = f'./data/bronze/usgs/date={day}/run_id={run_id}'
     os.makedirs(base, exist_ok=True)
 
-    # 4) salva raw
+    # 4) Salve raw data
     with open(f'{base}/usgs_all_hour.geojson', 'w') as f:
         json.dump(data, f)
 
-    # 5) salva manifest
+    # 5) Salve manifest
     manifest = {
         "source": "USGS all_hour",
         "source_url": USGS_FEED,
