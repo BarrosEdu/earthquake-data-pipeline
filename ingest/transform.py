@@ -18,7 +18,6 @@ def transform_to_silver(bronze_base):
     df = pd.json_normalize(features)
 
     #Transformation process - cleaning data and creating new columns
-
  
     df['event_id'] = df['id']
     df['mag'] = df['properties.mag']
