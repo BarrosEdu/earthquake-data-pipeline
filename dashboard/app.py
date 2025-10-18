@@ -14,12 +14,12 @@ st.set_page_config(page_title="Earthquake Monitor (API-driven)", layout="wide")
 # ------------------------
 # Config
 # ------------------------
-# 1) Lê API_KEY de st.secrets ou ambiente
+
 API_KEY = st.secrets.get("API_KEY", os.getenv("API_KEY", ""))  
 if not API_KEY:
-    st.warning("API_KEY não encontrada em st.secrets nem no ambiente. As chamadas à API protegida podem falhar (401).")
+    st.warning("API_KEY not found in st.secrets (401).")
 
-# 2) Cabeçalho padrão com a API Key
+
 HEADERS = {"X-API-Key": API_KEY} if API_KEY else {}            
 
 DEFAULT_API_BASE = os.getenv("API_BASE_URL", "https://earthquake-ce5c9a0f9ec7.herokuapp.com")
