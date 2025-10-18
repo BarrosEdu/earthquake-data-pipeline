@@ -3,6 +3,9 @@
 > **Data Engineering**  
 > Real-time(ish) earthquake ingestion → transform → Postgres/PostGIS storage → API + optional dashboard.
 
+[Earthquake Monitor - Dashboard](https://earthquake-data-pipeline.streamlit.app)
+[API Docs](https://earthquake-ce5c9a0f9ec7.herokuapp.com/docs)
+
 ## 1. Overview
 
 This repository implements a simplified real-time data pipeline for global earthquake monitoring:
@@ -45,8 +48,8 @@ Create a `.env` (or export variables) similar to:
 
 ```
 DATABASE_URL=postgresql+psycopg2://user:password@localhost:5432/earthquakes
-RUN_DATE=2025-10-16
-RUN_ID=20251016T092819Z
+SILVER_BASE=./data/silver
+USE_POSTGIS=1
 ```
 
 > `RUN_ID` is a unique identifier (e.g., UTC timestamp) used for auditability per ingestion run.
@@ -98,7 +101,7 @@ WHERE geom IS NULL AND lat IS NOT NULL AND lon IS NOT NULL;
 
 ```bash
 # Install deps
-pip install -r requirements.txt  # or: poetry install
+pip install -r requirements.txt
 
 # 1) Ingest + Transform
 python ingest/fetch_data.py
@@ -114,9 +117,9 @@ uvicorn api.main:app --reload --port 8000
 streamlit run dashboard/app.py
 ```
 
-## 5. API
+## 5. API Docs - Implemented
 
-Base URL: `http://localhost:8000`
+Base URL: `https://earthquake-ce5c9a0f9ec7.herokuapp.com/docs`
 
 ### 5.1 `GET /earthquakes/recent`
 Return recent earthquakes filtered by time and magnitude.
