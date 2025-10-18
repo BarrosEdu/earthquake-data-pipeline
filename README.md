@@ -62,7 +62,6 @@ This repository implements a simplified real-time data pipeline for global earth
 │ ├── bronze/ # Raw JSON files (downloaded data)
 │ └── silver/ # Parquet files (transformed data)
 │
-├── .env.example # Example environment configuration
 ├── Procfile # Heroku deployment commands
 ├── requirements.txt # Python dependencies
 ├── README.md # Project documentation
