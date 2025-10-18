@@ -3,8 +3,8 @@
 > **Data Engineering**  
 > Real-time(ish) earthquake ingestion → transform → Postgres/PostGIS storage → API + optional dashboard.
 
-[Earthquake Monitor - Dashboard](https://earthquake-data-pipeline.streamlit.app)
-[API Docs](https://earthquake-ce5c9a0f9ec7.herokuapp.com/docs)
+- [Earthquake Monitor - Dashboard](https://earthquake-data-pipeline.streamlit.app)
+- [API Docs](https://earthquake-ce5c9a0f9ec7.herokuapp.com/docs)
 
 ## 1. Overview
 
