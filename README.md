@@ -37,6 +37,7 @@ This repository implements a simplified real-time data pipeline for global earth
 - **Streamlit** (optional dashboard)
 
 ## 3. Repository Structure
+```
 .
 ├── ingest/
 │ ├── fetch_data.py # Fetches raw data from USGS API (bronze layer)
@@ -66,6 +67,7 @@ This repository implements a simplified real-time data pipeline for global earth
 ├── requirements.txt # Python dependencies
 ├── README.md # Project documentation
 └── .gitignore # Excluded files for version control
+```
 
 ## 4. Setup & Run
 
