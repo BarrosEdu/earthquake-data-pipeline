@@ -1,0 +1,1 @@
+{"source": "USGS all_hour", "source_url": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson", "ingestion_time_utc": "2025-10-21T14:17:30Z", "run_id": "20251021T141730Z", "records": 6, "bbox": [-146.5256, 38.800666809082, 1.2300000190735, -122.76850128174, 64.3996, 3.6]}
