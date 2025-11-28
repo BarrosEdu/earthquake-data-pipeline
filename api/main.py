@@ -10,7 +10,6 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from api.routers import earthquakes_db as earthquakes
 from api.middleware.auth import APIKeyMiddleware
 
-# NOVO: Prometheus puro (sem Instrumentator)
 from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
 
 
@@ -77,6 +76,7 @@ class MetricsMiddleware(BaseHTTPMiddleware):
 
 # Adiciona o middleware de métricas
 app.add_middleware(MetricsMiddleware)
+app.include_router(earthquakes.router)
 
 
 # Endpoint /metrics em formato Prometheus
