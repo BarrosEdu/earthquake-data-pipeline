@@ -13,6 +13,7 @@ class APIKeyMiddleware(BaseHTTPMiddleware):
             or path.startswith("/docs")
             or path.startswith("/redoc")
             or path.startswith("/static")
+            or path.startswith("/metrics")
         )
         if allowlisted:
             return await call_next(request)

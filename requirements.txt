@@ -11,3 +11,6 @@ requests
 pydeck
 streamlit
 gunicorn
+
+prometheus-client
+prometheus-fastapi-instrumentator

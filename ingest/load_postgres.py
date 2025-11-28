@@ -35,7 +35,7 @@ def upsert_ingestion_run(stats_path: str):
     rec["run_id"] = RUN_ID
     rec["source"] = SOURCE
     rec["inserted_at_utc"] = datetime.now(timezone.utc)
-
+    
     cols = ",".join(rec.keys())
     vals = ":" + ", :".join(rec.keys())
     updates = ", ".join([f"{k}=EXCLUDED.{k}" for k in rec.keys() if k != "run_id"])
