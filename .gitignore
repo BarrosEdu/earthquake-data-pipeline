@@ -80,3 +80,4 @@ pytest_cache/
 # Streamlit
 # ==========================================
 .streamlit/
+.prometheus

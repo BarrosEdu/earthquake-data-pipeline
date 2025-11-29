@@ -1,0 +1,18 @@
+{
+	"ulid": "01KB7CFV6WAE6380EQ5FC4508N",
+	"minTime": 1764382234383,
+	"maxTime": 1764388800000,
+	"stats": {
+		"numSamples": 7245,
+		"numFloatSamples": 7245,
+		"numSeries": 1055,
+		"numChunks": 1055
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01KB7CFV6WAE6380EQ5FC4508N"
+		]
+	},
+	"version": 1
+}
