@@ -75,7 +75,6 @@ pytest_cache/
 .test_.py
 .read_parquet.py
 .test_Json.py
-.data/wal
 
 # ==========================================
 # Streamlit
