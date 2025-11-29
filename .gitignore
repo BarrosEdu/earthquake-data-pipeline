@@ -75,9 +75,10 @@ pytest_cache/
 .test_.py
 .read_parquet.py
 .test_Json.py
+.wal
 
 # ==========================================
 # Streamlit
 # ==========================================
 .streamlit/
-.prometheus/prometheus_v0.yml
+.prometheus_v0.yml
