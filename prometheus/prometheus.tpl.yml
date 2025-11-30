@@ -1,0 +1,20 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+remote_write:
+  - url: https://prometheus-prod-58-prod-eu-central-0.grafana.net/api/prom/push
+    basic_auth:
+      username: ${GRAFANA_USERNAME}
+      password: ${GRAFANA_API_KEY}
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "earthquakes_api"
+    scheme: https
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["earthquake-ce5c9a0f9ec7.herokuapp.com"]
